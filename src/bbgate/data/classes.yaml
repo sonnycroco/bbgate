@@ -1,0 +1,77 @@
+# Vulnerability class slugs.
+#
+# These slugs are stable identifiers, not labels. A finding stores one of them
+# in `vuln_class`, the rubric keys off them, and the authz set names them. If you
+# rename a slug here you orphan every finding that already references the old
+# one, and those findings start failing the class guard on the next gate run.
+# Add new slugs freely; rename existing ones only if you are prepared to rewrite
+# the findings too.
+#
+# The grouping is for people reading the file. `load_classes` flattens it and
+# only ever uses the flat set, so a group name means nothing to the gate. Put a
+# class wherever you would look for it.
+#
+# To use your own list instead of this one, point at it from .bbgate/config.yaml:
+#
+#   classes: taxonomy/my-classes.yaml
+#
+# The override replaces this file, it does not merge with it.
+
+classes:
+  web:
+    - idor
+    - bola
+    - bfla
+    - xss
+    - sqli
+    - nosqli
+    - ssrf
+    - ssti
+    - xxe
+    - csrf
+    - cmd-injection
+    - path-traversal
+    - deserialization
+    - open-redirect
+    - file-upload
+    - race-condition
+    - cache-poisoning
+    - request-smuggling
+    - subdomain-takeover
+    - clickjacking
+    - cors
+    - info-disclosure
+    - business-logic
+
+  auth:
+    - auth
+    - session-mgmt
+    - jwt
+    - oauth
+    - saml
+    - mfa-bypass
+    - account-takeover
+    - password-reset
+
+  api:
+    - graphql
+    - rate-limit
+    - mass-assignment
+    - api-key-exposure
+
+  infra:
+    - secrets-exposure
+    - known-cve
+
+  cloud:
+    - cloud-metadata
+    - s3-bucket
+
+  mobile:
+    - mobile-storage
+    - cert-pinning
+    - deeplink
+
+  ai:
+    - prompt-injection
+    - insecure-output

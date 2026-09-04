@@ -1,0 +1,145 @@
+<svg class="rich-terminal" viewBox="0 0 1092 660.0" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generated with Rich https://www.textualize.io -->
+    <style>
+
+    
+    
+
+    .terminal-1960916499-matrix {
+        font-family: Fira Code, monospace;
+        font-size: 20px;
+        line-height: 24.4px;
+        font-variant-east-asian: full-width;
+    }
+
+    .terminal-1960916499-title {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: arial;
+    }
+
+    .terminal-1960916499-r1 { fill: #98a84b;font-weight: bold }
+.terminal-1960916499-r2 { fill: #c5c8c6;font-weight: bold }
+.terminal-1960916499-r3 { fill: #c5c8c6 }
+.terminal-1960916499-r4 { fill: #98a84b }
+.terminal-1960916499-r5 { fill: #00823d;font-weight: bold }
+.terminal-1960916499-r6 { fill: #868887 }
+    </style>
+
+    <defs>
+    <clipPath id="terminal-1960916499-clip-terminal">
+      <rect x="0" y="0" width="1072.6" height="609.0" />
+    </clipPath>
+    <clipPath id="terminal-1960916499-line-0">
+    <rect x="0" y="1.5" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-1">
+    <rect x="0" y="25.9" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-2">
+    <rect x="0" y="50.3" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-3">
+    <rect x="0" y="74.7" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-4">
+    <rect x="0" y="99.1" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-5">
+    <rect x="0" y="123.5" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-6">
+    <rect x="0" y="147.9" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-7">
+    <rect x="0" y="172.3" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-8">
+    <rect x="0" y="196.7" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-9">
+    <rect x="0" y="221.1" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-10">
+    <rect x="0" y="245.5" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-11">
+    <rect x="0" y="269.9" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-12">
+    <rect x="0" y="294.3" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-13">
+    <rect x="0" y="318.7" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-14">
+    <rect x="0" y="343.1" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-15">
+    <rect x="0" y="367.5" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-16">
+    <rect x="0" y="391.9" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-17">
+    <rect x="0" y="416.3" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-18">
+    <rect x="0" y="440.7" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-19">
+    <rect x="0" y="465.1" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-20">
+    <rect x="0" y="489.5" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-21">
+    <rect x="0" y="513.9" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-22">
+    <rect x="0" y="538.3" width="1073.6" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-1960916499-line-23">
+    <rect x="0" y="562.7" width="1073.6" height="24.65"/>
+            </clipPath>
+    </defs>
+
+    <rect fill="#292929" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1090" height="658" rx="8"/><text class="terminal-1960916499-title" fill="#c5c8c6" text-anchor="middle" x="545" y="27">capture&#160;the&#160;evidence,&#160;then&#160;it&#160;clears</text>
+            <g transform="translate(26,22)">
+            <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
+            <circle cx="22" cy="0" r="7" fill="#febc2e"/>
+            <circle cx="44" cy="0" r="7" fill="#28c840"/>
+            </g>
+        
+    <g transform="translate(9, 41)" clip-path="url(#terminal-1960916499-clip-terminal)">
+    
+    <g class="terminal-1960916499-matrix">
+    <text class="terminal-1960916499-r1" x="0" y="20" textLength="24.4" clip-path="url(#terminal-1960916499-line-0)">$&#160;</text><text class="terminal-1960916499-r2" x="24.4" y="20" textLength="780.8" clip-path="url(#terminal-1960916499-line-0)">bbgate&#160;add-artifact&#160;customer-pii-idor&#160;--type&#160;differential_pair&#160;\</text><text class="terminal-1960916499-r3" x="1073.6" y="20" textLength="12.2" clip-path="url(#terminal-1960916499-line-0)">
+</text><text class="terminal-1960916499-r2" x="0" y="44.4" textLength="854" clip-path="url(#terminal-1960916499-line-1)">&#160;&#160;&#160;&#160;&#160;&#160;--path&#160;ab.har&#160;--method&#160;&quot;burp,&#160;A&#160;vs&#160;B&#x27;s&#160;id,&#160;plus&#160;the&#160;403&#160;control&quot;</text><text class="terminal-1960916499-r3" x="1073.6" y="44.4" textLength="12.2" clip-path="url(#terminal-1960916499-line-1)">
+</text><text class="terminal-1960916499-r4" x="0" y="68.8" textLength="451.4" clip-path="url(#terminal-1960916499-line-2)">customer-pii-idor:&#160;differential_pair&#160;</text><text class="terminal-1960916499-r1" x="451.4" y="68.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-2)">(</text><text class="terminal-1960916499-r4" x="463.6" y="68.8" textLength="122" clip-path="url(#terminal-1960916499-line-2)">ab.har,&#160;sh</text><text class="terminal-1960916499-r5" x="585.6" y="68.8" textLength="109.8" clip-path="url(#terminal-1960916499-line-2)">a256:d52b</text><text class="terminal-1960916499-r4" x="695.4" y="68.8" textLength="97.6" clip-path="url(#terminal-1960916499-line-2)">cfb9b805</text><text class="terminal-1960916499-r1" x="793" y="68.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-2)">)</text><text class="terminal-1960916499-r3" x="1073.6" y="68.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-2)">
+</text><text class="terminal-1960916499-r3" x="1073.6" y="93.2" textLength="12.2" clip-path="url(#terminal-1960916499-line-3)">
+</text><text class="terminal-1960916499-r1" x="0" y="117.6" textLength="24.4" clip-path="url(#terminal-1960916499-line-4)">$&#160;</text><text class="terminal-1960916499-r2" x="24.4" y="117.6" textLength="719.8" clip-path="url(#terminal-1960916499-line-4)">bbgate&#160;add-artifact&#160;customer-pii-idor&#160;--type&#160;terminal_log&#160;\</text><text class="terminal-1960916499-r3" x="1073.6" y="117.6" textLength="12.2" clip-path="url(#terminal-1960916499-line-4)">
+</text><text class="terminal-1960916499-r2" x="0" y="142" textLength="793" clip-path="url(#terminal-1960916499-line-5)">&#160;&#160;&#160;&#160;&#160;&#160;--path&#160;verify.cast&#160;--method&#160;&quot;asciinema,&#160;full&#160;repro&#160;by&#160;hand&quot;</text><text class="terminal-1960916499-r3" x="1073.6" y="142" textLength="12.2" clip-path="url(#terminal-1960916499-line-5)">
+</text><text class="terminal-1960916499-r4" x="0" y="166.4" textLength="390.4" clip-path="url(#terminal-1960916499-line-6)">customer-pii-idor:&#160;terminal_log&#160;</text><text class="terminal-1960916499-r1" x="390.4" y="166.4" textLength="12.2" clip-path="url(#terminal-1960916499-line-6)">(</text><text class="terminal-1960916499-r4" x="402.6" y="166.4" textLength="183" clip-path="url(#terminal-1960916499-line-6)">verify.cast,&#160;sh</text><text class="terminal-1960916499-r5" x="585.6" y="166.4" textLength="109.8" clip-path="url(#terminal-1960916499-line-6)">a256:3428</text><text class="terminal-1960916499-r4" x="695.4" y="166.4" textLength="97.6" clip-path="url(#terminal-1960916499-line-6)">fa2256d3</text><text class="terminal-1960916499-r1" x="793" y="166.4" textLength="12.2" clip-path="url(#terminal-1960916499-line-6)">)</text><text class="terminal-1960916499-r3" x="1073.6" y="166.4" textLength="12.2" clip-path="url(#terminal-1960916499-line-6)">
+</text><text class="terminal-1960916499-r3" x="1073.6" y="190.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-7)">
+</text><text class="terminal-1960916499-r1" x="0" y="215.2" textLength="24.4" clip-path="url(#terminal-1960916499-line-8)">$&#160;</text><text class="terminal-1960916499-r2" x="24.4" y="215.2" textLength="353.8" clip-path="url(#terminal-1960916499-line-8)">bbgate&#160;gate&#160;customer-pii-idor</text><text class="terminal-1960916499-r3" x="1073.6" y="215.2" textLength="12.2" clip-path="url(#terminal-1960916499-line-8)">
+</text><text class="terminal-1960916499-r4" x="24.4" y="239.6" textLength="48.8" clip-path="url(#terminal-1960916499-line-9)">PASS</text><text class="terminal-1960916499-r3" x="73.2" y="239.6" textLength="451.4" clip-path="url(#terminal-1960916499-line-9)">&#160;check_1:&#160;impact_tier&#160;is&#160;demonstrated</text><text class="terminal-1960916499-r3" x="1073.6" y="239.6" textLength="12.2" clip-path="url(#terminal-1960916499-line-9)">
+</text><text class="terminal-1960916499-r4" x="24.4" y="264" textLength="48.8" clip-path="url(#terminal-1960916499-line-10)">PASS</text><text class="terminal-1960916499-r3" x="73.2" y="264" textLength="439.2" clip-path="url(#terminal-1960916499-line-10)">&#160;check_2:&#160;impact&#160;statement&#160;complete&#160;</text><text class="terminal-1960916499-r2" x="512.4" y="264" textLength="12.2" clip-path="url(#terminal-1960916499-line-10)">(</text><text class="terminal-1960916499-r3" x="524.6" y="264" textLength="280.6" clip-path="url(#terminal-1960916499-line-10)">position,&#160;action,&#160;asset</text><text class="terminal-1960916499-r2" x="805.2" y="264" textLength="12.2" clip-path="url(#terminal-1960916499-line-10)">)</text><text class="terminal-1960916499-r3" x="1073.6" y="264" textLength="12.2" clip-path="url(#terminal-1960916499-line-10)">
+</text><text class="terminal-1960916499-r4" x="24.4" y="288.4" textLength="48.8" clip-path="url(#terminal-1960916499-line-11)">PASS</text><text class="terminal-1960916499-r3" x="73.2" y="288.4" textLength="732" clip-path="url(#terminal-1960916499-line-11)">&#160;check_3:&#160;at&#160;least&#160;one&#160;impact-evidencing&#160;artifact&#160;is&#160;present</text><text class="terminal-1960916499-r3" x="1073.6" y="288.4" textLength="12.2" clip-path="url(#terminal-1960916499-line-11)">
+</text><text class="terminal-1960916499-r4" x="24.4" y="312.8" textLength="48.8" clip-path="url(#terminal-1960916499-line-12)">PASS</text><text class="terminal-1960916499-r3" x="73.2" y="312.8" textLength="463.6" clip-path="url(#terminal-1960916499-line-12)">&#160;check_4:&#160;two-principal&#160;proof&#160;present&#160;</text><text class="terminal-1960916499-r2" x="536.8" y="312.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-12)">(</text><text class="terminal-1960916499-r3" x="549" y="312.8" textLength="402.6" clip-path="url(#terminal-1960916499-line-12)">differential_pair&#160;or&#160;forged_token</text><text class="terminal-1960916499-r2" x="951.6" y="312.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-12)">)</text><text class="terminal-1960916499-r3" x="1073.6" y="312.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-12)">
+</text><text class="terminal-1960916499-r4" x="24.4" y="337.2" textLength="48.8" clip-path="url(#terminal-1960916499-line-13)">PASS</text><text class="terminal-1960916499-r3" x="73.2" y="337.2" textLength="805.2" clip-path="url(#terminal-1960916499-line-13)">&#160;check_5:&#160;clean-state&#160;run&#160;reproduced&#160;from&#160;fresh&#160;with&#160;no&#160;deviations</text><text class="terminal-1960916499-r3" x="1073.6" y="337.2" textLength="12.2" clip-path="url(#terminal-1960916499-line-13)">
+</text><text class="terminal-1960916499-r4" x="24.4" y="361.6" textLength="48.8" clip-path="url(#terminal-1960916499-line-14)">PASS</text><text class="terminal-1960916499-r3" x="73.2" y="361.6" textLength="488" clip-path="url(#terminal-1960916499-line-14)">&#160;check_6:&#160;repro&#160;steps&#160;are&#160;self-contained</text><text class="terminal-1960916499-r3" x="1073.6" y="361.6" textLength="12.2" clip-path="url(#terminal-1960916499-line-14)">
+</text><text class="terminal-1960916499-r4" x="24.4" y="386" textLength="48.8" clip-path="url(#terminal-1960916499-line-15)">PASS</text><text class="terminal-1960916499-r3" x="73.2" y="386" textLength="707.6" clip-path="url(#terminal-1960916499-line-15)">&#160;check_7:&#160;scope&#160;ok&#160;for&#160;api.example.com,&#160;class&#160;not&#160;excluded</text><text class="terminal-1960916499-r3" x="1073.6" y="386" textLength="12.2" clip-path="url(#terminal-1960916499-line-15)">
+</text><text class="terminal-1960916499-r4" x="24.4" y="410.4" textLength="48.8" clip-path="url(#terminal-1960916499-line-16)">PASS</text><text class="terminal-1960916499-r3" x="73.2" y="410.4" textLength="597.8" clip-path="url(#terminal-1960916499-line-16)">&#160;check_8:&#160;manual&#160;verification&#160;postdates&#160;the&#160;draft</text><text class="terminal-1960916499-r3" x="1073.6" y="410.4" textLength="12.2" clip-path="url(#terminal-1960916499-line-16)">
+</text><text class="terminal-1960916499-r4" x="24.4" y="434.8" textLength="48.8" clip-path="url(#terminal-1960916499-line-17)">PASS</text><text class="terminal-1960916499-r3" x="73.2" y="434.8" textLength="378.2" clip-path="url(#terminal-1960916499-line-17)">&#160;check_9:&#160;confidence&#160;floor&#160;met&#160;</text><text class="terminal-1960916499-r2" x="451.4" y="434.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-17)">(</text><text class="terminal-1960916499-r3" x="463.6" y="434.8" textLength="146.4" clip-path="url(#terminal-1960916499-line-17)">demonstrated</text><text class="terminal-1960916499-r2" x="610" y="434.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-17)">)</text><text class="terminal-1960916499-r3" x="1073.6" y="434.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-17)">
+</text><text class="terminal-1960916499-r6" x="24.4" y="459.2" textLength="1000.4" clip-path="url(#terminal-1960916499-line-18)">note:&#160;check_7&#160;passed&#160;because&#160;no&#160;scope&#160;engine&#160;is&#160;configured.&#160;Set&#160;the&#160;scope:&#160;key&#160;in&#160;</text><text class="terminal-1960916499-r3" x="1073.6" y="459.2" textLength="12.2" clip-path="url(#terminal-1960916499-line-18)">
+</text><text class="terminal-1960916499-r6" x="0" y="483.6" textLength="561.2" clip-path="url(#terminal-1960916499-line-19)">.bbgate/config.yaml&#160;to&#160;make&#160;it&#160;mean&#160;something.</text><text class="terminal-1960916499-r3" x="1073.6" y="483.6" textLength="12.2" clip-path="url(#terminal-1960916499-line-19)">
+</text><text class="terminal-1960916499-r3" x="1073.6" y="508" textLength="12.2" clip-path="url(#terminal-1960916499-line-20)">
+</text><text class="terminal-1960916499-r1" x="0" y="532.4" textLength="170.8" clip-path="url(#terminal-1960916499-line-21)">VERDICT:&#160;READY</text><text class="terminal-1960916499-r3" x="1073.6" y="532.4" textLength="12.2" clip-path="url(#terminal-1960916499-line-21)">
+</text><text class="terminal-1960916499-r3" x="1073.6" y="556.8" textLength="12.2" clip-path="url(#terminal-1960916499-line-22)">
+</text><text class="terminal-1960916499-r1" x="0" y="581.2" textLength="24.4" clip-path="url(#terminal-1960916499-line-23)">$&#160;</text><text class="terminal-1960916499-r2" x="24.4" y="581.2" textLength="390.4" clip-path="url(#terminal-1960916499-line-23)">bbgate&#160;package&#160;customer-pii-idor</text><text class="terminal-1960916499-r3" x="1073.6" y="581.2" textLength="12.2" clip-path="url(#terminal-1960916499-line-23)">
+</text><text class="terminal-1960916499-r4" x="0" y="605.6" textLength="829.6" clip-path="url(#terminal-1960916499-line-24)">submission&#160;package&#160;written:&#160;findings/customer-pii-idor.submission.md</text><text class="terminal-1960916499-r3" x="1073.6" y="605.6" textLength="12.2" clip-path="url(#terminal-1960916499-line-24)">
+</text>
+    </g>
+    </g>
+</svg>

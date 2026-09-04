@@ -1,0 +1,40 @@
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+wheels/
+pip-wheel-metadata/
+
+# Bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Editor and OS noise
+.DS_Store
+*.swp
+.idea/
+.vscode/
+.claude/
+CLAUDE.md
+
+# Local gate state. The log is telemetry from one machine and merges badly.
+.bbgate/gate-log.tsv
+
+# QUEUE.md is generated but deliberately NOT ignored. It is the diffable record
+# of what you owe, and it is meant to be committed.

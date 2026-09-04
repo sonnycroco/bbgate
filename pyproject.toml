@@ -1,0 +1,81 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bbgate"
+version = "0.1.0"
+description = "A pre-submission gate for bug bounty findings. Refuses anything that proves a condition instead of a demonstrated consequence."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Sonny Croco" }]
+dependencies = [
+    "click>=8.0",
+    "pyyaml>=5.4",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff"]
+
+[project.urls]
+Homepage = "https://github.com/sonnycroco/bbgate"
+Repository = "https://github.com/sonnycroco/bbgate"
+Issues = "https://github.com/sonnycroco/bbgate/issues"
+
+[project.scripts]
+bbgate = "bbgate.cli:main"
+
+# Selecting the package directory ships everything inside it, so data/ (the
+# rubric, the class list and the worked example, all read at runtime) lands in
+# the wheel. Do not add a force-include for it: hatchling refuses a path that
+# the package selection already covers.
+[tool.hatch.build.targets.wheel]
+packages = ["src/bbgate"]
+
+# Lint only. `ruff format` is deliberately not adopted: the source is hand
+# wrapped to keep related arguments on one line, and reformatting it would
+# rewrite almost every file to say the same thing.
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+# The rule set is deliberately narrow: things that are wrong, not things that
+# are differently written. A linter that reports taste gets ignored, and then
+# it is not there for the one finding that mattered.
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "ISC", "FURB", "DTZ", "RUF", "PLE", "PLW"]
+ignore = [
+    # Timestamps in frontmatter are naive local ISO strings and are only ever
+    # compared against each other. Making them aware would change what a
+    # finding on disk means, so a naive now() is the intended behaviour.
+    "DTZ005",
+    # __all__ is grouped by kind (types, verdicts, tiers, functions), not
+    # sorted flat.
+    "RUF022",
+    # try/except/pass and if/else read more plainly here than
+    # contextlib.suppress and a ternary.
+    "SIM105",
+    "SIM108",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# The scope stubs are one-line dicts. A def per stub is four times the text
+# for the same thing.
+"tests/conftest.py" = ["E731"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["bbgate"]
+# conftest is imported by path from the tests directory, not as a package. Its
+# own section keeps it below the bbgate imports where it already sits.
+known-local-folder = ["conftest"]
+
+# pythonpath here is what makes a bare `pytest` work against a src layout
+# without installing the package first. filterwarnings promotes deprecations
+# to failures, which is how the Click 8 -> 9 removal gets caught here rather
+# than in somebody's CI.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+filterwarnings = ["error"]

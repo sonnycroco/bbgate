@@ -1,0 +1,218 @@
+# Per-class impact rubric.
+#
+# One entry per class slug, three fields each:
+#
+#   condition      what the class looks like when it is still only a condition.
+#                  Everything described here is true and none of it is
+#                  submittable on its own.
+#   bar            the consequence that clears it. Read these as the thing you
+#                  have to be able to say happened, not the thing you saw.
+#   next_artifact  the concrete capture to go and make. The gate prints this
+#                  line on HOLD when a missing impact artifact is what is
+#                  standing in the way, so it is written as an instruction and
+#                  it names an artifact type.
+#
+# Artifact types that evidence impact: differential_pair, oob_callback,
+# poc_html, forged_token, and http_exchange only when the row is flagged
+# shows_privileged_data. terminal_log and screen_recording are verification
+# artifacts for check_8. A screenshot counts for nothing.
+#
+# A class with no entry here falls back to the generic hint. That is a weaker
+# prompt, not a weaker bar. Override the whole file from .bbgate/config.yaml:
+#
+#   rubric: taxonomy/my-rubric.yaml
+#
+# Every bar demands a consequence rather than a condition. Keep it that way when
+# you edit, or you have removed the only thing this file does.
+
+rubric:
+
+  info-disclosure:
+    condition: "a config file, stack trace, version banner or secret endpoint is exposed"
+    bar: >-
+      the chain is closed: the leaked secret authorises an action, or the
+      internal host it names is reached, or a CVE it implies works on this
+      instance
+    next_artifact: >-
+      capture an http_exchange flagged shows_privileged_data, or an
+      oob_callback, showing the leaked value being used to reach privileged
+      data or a working exploit against this instance
+
+  cors:
+    condition: "ACAO reflects your origin and ACAC is true"
+    bar: >-
+      a page on your origin reads a sensitive credentialed response and you
+      have the value it read
+    next_artifact: >-
+      capture a poc_html served from the attacker origin, with the
+      cross-origin response value it exfiltrated present in the capture
+
+  idor:
+    condition: "object IDs are enumerable"
+    bar: "principal A acts on principal B's object, with a negative control"
+    next_artifact: >-
+      capture a differential_pair: A's request against B's object and the
+      response it got, plus the negative control showing the same request
+      refused
+
+  bola:
+    condition: "object IDs are enumerable"
+    bar: >-
+      principal A reads or acts on principal B's object, with a negative
+      control
+    next_artifact: >-
+      capture a differential_pair: A's request against B's object and the
+      response it got, plus the negative control showing the same request
+      refused
+
+  bfla:
+    condition: "a privileged function is reachable"
+    bar: >-
+      a lower-privileged principal invokes the privileged function, with a
+      negative control
+    next_artifact: >-
+      capture a differential_pair: the low-privilege principal invoking the
+      function and the effect it had, plus the negative control showing the
+      call refused for that principal
+
+  ssrf:
+    condition: "the server fetches your URL, or follows your redirect"
+    bar: >-
+      a server-side fetch plus evidence it reached something internal. A
+      redirect that was followed and nothing more is inferred, not
+      demonstrated, and holds
+    next_artifact: >-
+      capture an oob_callback proving the fetch came from the target's
+      infrastructure, together with the internal-reach evidence (the internal
+      response body, a metadata credential, an internal service banner)
+
+  oauth:
+    condition: "redirect_uri accepts an attacker-controlled value"
+    bar: >-
+      a code or token arrives at the attacker destination, or you control the
+      dangling host the redirect resolves to
+    next_artifact: >-
+      capture the code or token at the attacker destination as a forged_token
+      or a differential_pair, or evidence that you control the host
+      redirect_uri points at
+
+  jwt:
+    condition: "the parser accepts a weak alg, or none"
+    bar: "a token you minted is accepted for a privileged action"
+    next_artifact: >-
+      capture a forged_token: the token you signed, and the privileged
+      response the server returned for it
+
+  xss:
+    condition: "input is reflected unescaped"
+    bar: "script executes and exfiltrates a session or credentialed value"
+    next_artifact: >-
+      capture a poc_html that runs the payload, with the value it stole
+      present in the capture
+
+  sqli:
+    condition: >-
+      an error message, a timing difference or a boolean difference shows the
+      query is injectable
+    bar: >-
+      you read data out of the database that your account has no route to, or
+      you changed the query's authorisation decision
+    next_artifact: >-
+      capture an http_exchange flagged shows_privileged_data holding rows you
+      should not be able to read, or a differential_pair showing the injection
+      flipping an authorisation decision
+
+  cmd-injection:
+    condition: "a payload delays the response, or the parameter reaches a shell"
+    bar: >-
+      a command ran on the target and you have its output, or an out-of-band
+      callback ties the execution to the host
+    next_artifact: >-
+      capture an oob_callback fired from the target host, or an http_exchange
+      flagged shows_privileged_data containing the output of the single
+      read-only command you ran
+
+  path-traversal:
+    condition: "a traversal payload changes the response, or an error names a filesystem path"
+    bar: >-
+      you read a file outside the web root whose contents matter: credentials,
+      a key, source, or another tenant's data
+    next_artifact: >-
+      capture an http_exchange flagged shows_privileged_data with the contents
+      of the out-of-root file in the response body
+
+  subdomain-takeover:
+    condition: "a CNAME dangles and the provider returns its not-configured page"
+    bar: >-
+      you claimed the name and the target hostname now serves content you
+      control, or something scoped to the parent domain arrives at it
+    next_artifact: >-
+      claim the name, then capture a poc_html served from the target hostname
+      itself, plus an http_exchange flagged shows_privileged_data showing a
+      cookie, token or OAuth code sent to that host
+
+  open-redirect:
+    condition: "the parameter sends a browser to a host you control"
+    bar: >-
+      the redirect carries something with it: a token, an auth code or a
+      session value that lands at your destination. A bare redirect is not a
+      finding
+    next_artifact: >-
+      capture an http_exchange flagged shows_privileged_data showing the token
+      or code arriving at the attacker destination, or a poc_html holding the
+      captured value
+
+  csrf:
+    condition: "the endpoint has no token, or the token is present but never verified"
+    bar: >-
+      a cross-site request from a page you host changes state on a victim
+      account, and you can show the changed state
+    next_artifact: >-
+      capture a poc_html that performs the request cross-site, plus the
+      http_exchange flagged shows_privileged_data (or a differential_pair)
+      showing the victim account's state after it ran
+
+  account-takeover:
+    condition: >-
+      a reset token is predictable, an email change skips re-auth, or a
+      credentialed link leaks in a Referer
+    bar: >-
+      you hold a session on an account that is not yours and you took an
+      action as that account
+    next_artifact: >-
+      capture a differential_pair: the takeover step, then a request
+      authenticated as the victim returning the victim's own data, plus the
+      control showing your original account cannot reach it
+
+  secrets-exposure:
+    condition: >-
+      a key, token or credential is sitting in a public repo, a JS bundle or a
+      response body
+    bar: >-
+      the credential is live and authorises something that matters, shown by
+      using it once, read-only, on the smallest call that proves it
+    next_artifact: >-
+      capture an http_exchange flagged shows_privileged_data: one read-only
+      call made with the credential, returning the identity or the data that
+      proves it is live and privileged
+
+  known-cve:
+    condition: "a version banner matches a published CVE"
+    bar: >-
+      the exploit works on this instance and you have what it returned. A
+      version number is a guess about the past, not a finding
+    next_artifact: >-
+      capture an http_exchange flagged shows_privileged_data, or an
+      oob_callback, showing the CVE's primitive firing on this host. A
+      scanner's version match is not the artifact
+
+  prompt-injection:
+    condition: "the model repeats your instruction, or hands back its system prompt"
+    bar: >-
+      the injected instruction makes the application act: call a tool, read
+      another user's data, or emit output that executes in a victim's browser
+    next_artifact: >-
+      capture an oob_callback or an http_exchange flagged
+      shows_privileged_data showing the tool call the injection triggered or
+      the other-user data it returned, or a poc_html when the injection lands
+      as executed output
