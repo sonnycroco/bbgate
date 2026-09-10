@@ -11,6 +11,7 @@ from pathlib import Path
 
 from .config import Config
 from .evaluate import evaluate
+from .frontmatter import write_text_atomic
 from .model import DROP, HOLD, READY
 from .scope import resolver
 from .store import all_slugs
@@ -76,6 +77,6 @@ def render_queue(cfg: Config, *, scope_fn=None) -> str:
 def write_queue(cfg: Config, *, scope_fn=None) -> Path:
     """Write the rendered queue to `cfg.queue_path` and return it."""
     content = render_queue(cfg, scope_fn=scope_fn)
-    cfg.queue_path.parent.mkdir(parents=True, exist_ok=True)
-    cfg.queue_path.write_text(content, encoding="utf-8")
+    write_text_atomic(cfg.queue_path, content)
     return cfg.queue_path
+
