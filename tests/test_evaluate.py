@@ -337,3 +337,16 @@ def test_program_name_matches_case_insensitively(tmp_path, write_finding, add_ma
     fp = write_finding("idor-caps", program="Example-BBP")
     add_manifest(fp, [DIFFERENTIAL, VERIFICATION])
     assert evaluate("idor-caps", cfg, scope_fn=OK).verdict == "DROP"
+
+
+def test_scope_reasons_of_any_shape_are_displayed_not_fatal(project, write_finding, add_manifest):
+    """The engine's reasons field is external JSON. It must never raise."""
+    fp = write_finding("odd-reasons")
+    add_manifest(fp, [DIFFERENTIAL, VERIFICATION])
+    for odd in ("a plain string", 42, None, [1, 2], {"k": "v"}, [None, ""]):
+        def scope(host, program="", odd=odd):
+            return {"verdict": "warn", "reasons": odd}
+
+        v = evaluate("odd-reasons", project, scope_fn=scope)
+        assert v.verdict == "HOLD"
+        assert "check_7" in failed(v)

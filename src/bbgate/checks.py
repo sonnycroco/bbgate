@@ -222,7 +222,15 @@ def check_7_scope_clear(
     """
     host = str(fm.get("target_host") or "").strip()
     verdict = str(scope.get("verdict") or "unknown").strip().lower()
-    reasons = "; ".join(scope.get("reasons") or []) or "no reason given"
+    # The reasons come off an external engine's stdout and can be any JSON
+    # shape. A string, a number or a list of numbers is displayed, not tripped
+    # over; the verdict field is the only thing that has to be well-formed.
+    raw_reasons = scope.get("reasons")
+    if isinstance(raw_reasons, list):
+        reasons = "; ".join(str(r).strip() for r in raw_reasons if str(r).strip())
+    else:
+        reasons = str(raw_reasons or "").strip()
+    reasons = reasons or "no reason given"
 
     duplicate = fm.get("suspected_duplicate")
     if isinstance(duplicate, str):
