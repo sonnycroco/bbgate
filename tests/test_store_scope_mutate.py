@@ -285,3 +285,12 @@ def test_a_readme_among_findings_is_not_a_finding(project, write_finding, add_ma
     add_manifest(fp, [DIFFERENTIAL, VERIFICATION])
     (fp.parent / "README.md").write_text("# how we file findings\n", encoding="utf-8")
     assert all_slugs(project) == ["real-finding"]
+
+
+def test_evidence_markdown_cannot_shadow_a_finding(project, write_finding, add_manifest):
+    """A captured .md named after the finding is evidence, not the finding."""
+    fp = write_finding("deep", severity="high/api")
+    add_manifest(fp, [DIFFERENTIAL, VERIFICATION])
+    decoy = artifacts_dir(fp) / "deep.md"
+    decoy.write_text("captured response body", encoding="utf-8")
+    assert find_finding(project, "deep") == fp

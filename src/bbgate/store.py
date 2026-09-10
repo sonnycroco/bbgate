@@ -54,8 +54,14 @@ def find_finding(cfg: Config, slug: str) -> Path | None:
     if graded:
         return graded[0]
 
-    deep = sorted(p for p in base.glob(f"**/{slug}.md") if p.is_file())
+    # Captured evidence is sometimes markdown, and an evidence file named after
+    # the finding would otherwise resolve as the finding itself.
+    deep = sorted(
+        p for p in base.glob(f"**/{slug}.md")
+        if p.is_file() and ARTIFACTS_DIRNAME not in p.relative_to(base).parts[:-1]
+    )
     return deep[0] if deep else None
+
 
 
 def artifacts_dir(finding_path: Path) -> Path:
