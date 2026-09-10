@@ -37,6 +37,9 @@ def test_init_creates_a_project(tmp_path):
     assert result.exit_code == 0
     assert (tmp_path / ".bbgate" / "config.yaml").exists()
     assert (tmp_path / "findings").is_dir()
+    ignore = (tmp_path / ".bbgate" / ".gitignore").read_text(encoding="utf-8")
+    assert "gate-log.tsv" in ignore
+    assert "locks/" in ignore
 
 
 def test_init_does_not_clobber(tmp_path):

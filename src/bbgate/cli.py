@@ -55,6 +55,14 @@ programs: {}
 """
 
 
+_BBGATE_GITIGNORE = """\
+# Local gate state. The log is telemetry from one machine and merges badly, and
+# the lock files are empty. config.yaml is meant to be committed.
+gate-log.tsv
+locks/
+"""
+
+
 def _project() -> Config:
     """Resolve the project or exit 2 with the reason."""
     try:
@@ -145,6 +153,10 @@ def init_cmd(example: bool) -> None:
 
     marker.mkdir(parents=True)
     (marker / "config.yaml").write_text(_CONFIG_TEMPLATE, encoding="utf-8")
+    # Git honours a .gitignore inside any directory. Writing one here keeps the
+    # log and the lock files out of the user's repo without touching whatever
+    # top-level ignore file they already have.
+    (marker / ".gitignore").write_text(_BBGATE_GITIGNORE, encoding="utf-8")
     (root / "findings").mkdir(exist_ok=True)
     console.print(f"[green]Created[/green] {PROJECT_MARKER}/config.yaml and findings/")
 

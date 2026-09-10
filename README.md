@@ -329,7 +329,8 @@ programs:
 
 `.bbgate/` also holds the gate log and, under `locks/`, the empty lock files
 that keep two processes from interleaving a manifest or log row. Both are
-local state and the shipped `.gitignore` leaves them out.
+local state, and `bbgate init` writes a `.bbgate/.gitignore` that keeps them
+out of your repo while leaving `config.yaml` in.
 
 The rubric says what each class looks like when it is only a condition, what
 clears it, and which artifact to go and capture. If your programs draw the line
