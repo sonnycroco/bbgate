@@ -79,4 +79,3 @@ def write_queue(cfg: Config, *, scope_fn=None) -> Path:
     content = render_queue(cfg, scope_fn=scope_fn)
     write_text_atomic(cfg.queue_path, content)
     return cfg.queue_path
-

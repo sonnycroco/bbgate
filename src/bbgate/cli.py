@@ -84,7 +84,6 @@ def _print_checks(cfg: Config, verdict) -> None:
         console.print(f"  [{color}]{tag}[/{color}] {label}{mark}: {check.reason}")
 
 
-
 def _print_verdict(cfg: Config, verdict) -> None:
     _print_checks(cfg, verdict)
     # Nothing ran when the finding is missing, so the scope note would be noise.
@@ -165,7 +164,6 @@ def init_cmd(example: bool) -> None:
     if example:
         console.print("\nThe example is findings/customer-pii-idor.md. Start with:")
         console.print("  bbgate gate customer-pii-idor")
-
 
 
 @main.command("new")
@@ -406,9 +404,7 @@ def checks_cmd() -> None:
     )
 
 
-
 @main.command("classes")
-
 def classes_cmd() -> None:
     """List the known vulnerability classes and the bar each one has to clear."""
     cfg = _project()

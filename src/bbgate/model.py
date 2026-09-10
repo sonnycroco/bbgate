@@ -91,7 +91,6 @@ CHECK_MEANINGS = {
 }
 
 DEFAULT_NEXT_ARTIFACT = (
-
     "an artifact proving the consequence: differential_pair, oob_callback, "
     "poc_html with the captured value, forged_token, or an http_exchange "
     "flagged shows_privileged_data"
@@ -131,7 +130,6 @@ class CheckResult:
             "id": self.cid,
             "name": self.name,
             "passed": self.passed,
-
             "reason": self.reason,
             "fail_route": self.fail_route,
         }

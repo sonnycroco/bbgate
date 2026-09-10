@@ -63,7 +63,6 @@ def find_finding(cfg: Config, slug: str) -> Path | None:
     return deep[0] if deep else None
 
 
-
 def artifacts_dir(finding_path: Path) -> Path:
     """Artifacts live beside the finding, in a directory named for its slug."""
     return finding_path.parent / finding_path.stem / ARTIFACTS_DIRNAME

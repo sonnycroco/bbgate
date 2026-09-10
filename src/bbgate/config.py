@@ -82,7 +82,6 @@ class Config:
             (v for k, v in self.programs.items() if str(k).strip().lower() == wanted),
             None,
         ) or {}
-
         raw = entry.get("excludes") if isinstance(entry, dict) else None
         if not isinstance(raw, list):
             return []
