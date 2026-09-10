@@ -28,7 +28,7 @@ def write_log(cfg: Config, slug: str, verdict: Verdict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with frontmatter.locked(path, cfg.lock_dir):
         new_file = not path.exists()
-        with path.open("a", encoding="utf-8", newline="") as fh:
+        with frontmatter.open_append(path) as fh:
             writer = csv.DictWriter(
                 fh,
                 fieldnames=LOG_FIELDS,

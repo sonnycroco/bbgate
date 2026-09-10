@@ -174,7 +174,10 @@ def add_artifact(
         "capture_method": capture_method.strip() or "manual",
         "shows_privileged_data": "true" if shows_privileged_data else "false",
     }
-    store.append_manifest_row(path, row, cfg.lock_dir)
+    try:
+        store.append_manifest_row(path, row, cfg.lock_dir)
+    except OSError as exc:
+        return False, f"could not record the artifact: {exc}"
     return True, f"{slug}: {row['type']} ({dest.name}, sha256:{digest[:12]})"
 
 

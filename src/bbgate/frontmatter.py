@@ -3,16 +3,26 @@
 Findings are the irreplaceable part of a project using this tool, so every
 rewrite here goes through a temp file and a rename. A plain write truncates the
 target first, and an interrupt at the wrong moment leaves an empty finding.
+
+Nothing here follows a symlink when writing. A project config travels with the
+project, and so does everything else in the checkout: a cloned repo can ship a
+symlink where the tool expects to create or append to a file, pointing at
+something of the victim's. Every write path opens with O_NOFOLLOW or creates
+under a fresh random name, so a planted link is refused rather than written
+through.
 """
 from __future__ import annotations
 
 import hashlib
 import os
 import re
+import tempfile
 from contextlib import contextmanager
 from pathlib import Path
 
 import yaml
+
+_NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
 
 # The trailing run is [ \t]* rather than \s*, which would swallow the blank line
 # most people leave between the closing fence and the body. That newline belongs
@@ -68,9 +78,20 @@ def read_frontmatter(path: Path) -> dict:
 
 def write_text_atomic(path: Path, content: str, encoding: str = "utf-8") -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(path.name + ".tmp")
+    # mkstemp creates the temp file exclusively under a random name, so a link
+    # planted at a guessable "<name>.tmp" is never opened. The rename then
+    # replaces whatever sits at `path`, a symlink included, rather than
+    # writing through it.
+    fd, tmp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=path.parent)
+    tmp = Path(tmp_name)
     try:
-        tmp.write_text(content, encoding=encoding)
+        with os.fdopen(fd, "w", encoding=encoding) as fh:
+            fh.write(content)
+        # mkstemp is 0600 by design. A finding or a queue file should carry the
+        # permissions any other new file would, so apply the umask ourselves.
+        umask = os.umask(0)
+        os.umask(umask)
+        os.chmod(tmp, 0o666 & ~umask)
         os.replace(tmp, path)
     except BaseException:
         try:
@@ -78,6 +99,19 @@ def write_text_atomic(path: Path, content: str, encoding: str = "utf-8") -> None
         except OSError:
             pass
         raise
+
+
+def open_append(path: Path):
+    """Open `path` for appending, creating it if needed, never through a symlink.
+
+    Raises OSError naming the problem when `path` is a link. The manifest and
+    the gate log are the two append-only files, and both live at paths a
+    cloned project controls.
+    """
+    if path.is_symlink():
+        raise OSError(f"{path} is a symlink; refusing to append through it")
+    fd = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_CREAT | _NOFOLLOW, 0o644)
+    return os.fdopen(fd, "a", encoding="utf-8", newline="")
 
 
 def write_frontmatter(path: Path, fm: dict) -> None:
@@ -113,7 +147,8 @@ def locked(path: Path, lock_dir: Path):
 
     path.parent.mkdir(parents=True, exist_ok=True)
     lock_dir.mkdir(parents=True, exist_ok=True)
-    with open(lock_path_for(path, lock_dir), "w") as fh:
+    fd = os.open(lock_path_for(path, lock_dir), os.O_WRONLY | os.O_CREAT | _NOFOLLOW, 0o644)
+    with os.fdopen(fd, "w") as fh:
         fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
         try:
             yield

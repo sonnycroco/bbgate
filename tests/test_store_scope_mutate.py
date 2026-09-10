@@ -343,3 +343,74 @@ def test_read_only_config_paths_may_live_outside(tmp_path):
         f"classes: {shared}\n", encoding="utf-8"
     )
     assert load_config(tmp_path).classes == {"custom"}
+
+
+# Symlinks planted by a hostile checkout. None of these may write outside.
+
+
+def test_atomic_write_ignores_a_planted_tmp_symlink(project, write_finding, tmp_path):
+    victim = tmp_path.parent / "victim-rewrite.txt"
+    victim.write_text("untouched", encoding="utf-8")
+    fp = write_finding("planted")
+    (fp.parent / "planted.md.tmp").symlink_to(victim)
+    ok, _ = stamp_ai(project, "planted", when="2026-07-01T00:00:00")
+    assert ok
+    assert victim.read_text(encoding="utf-8") == "untouched"
+    assert "2026-07-01" in fp.read_text(encoding="utf-8")
+
+
+def test_atomic_write_replaces_a_symlinked_target_instead_of_following(
+    project, write_finding, tmp_path
+):
+    victim = tmp_path.parent / "victim-queue.md"
+    victim.write_text("untouched", encoding="utf-8")
+    project.queue_path.symlink_to(victim)
+    from bbgate.queue import write_queue
+    write_queue(project, scope_fn=OK)
+    assert victim.read_text(encoding="utf-8") == "untouched"
+    assert not project.queue_path.is_symlink()
+    assert "Submission queue" in project.queue_path.read_text(encoding="utf-8")
+
+
+def test_manifest_symlink_is_refused(project, write_finding, tmp_path):
+    victim = tmp_path.parent / "victim-manifest.tsv"
+    victim.write_text("untouched", encoding="utf-8")
+    fp = write_finding("linked-manifest")
+    adir = artifacts_dir(fp)
+    adir.mkdir(parents=True)
+    (adir / "manifest.tsv").symlink_to(victim)
+    src = tmp_path / "pair.har"
+    src.write_text("bytes", encoding="utf-8")
+    ok, message = add_artifact(project, "linked-manifest", atype="differential_pair", src=str(src))
+    assert not ok
+    assert "symlink" in message
+    assert victim.read_text(encoding="utf-8") == "untouched"
+
+
+def test_dangling_destination_symlink_is_not_written_through(project, write_finding, tmp_path):
+    fp = write_finding("dangling")
+    adir = artifacts_dir(fp)
+    adir.mkdir(parents=True)
+    target = tmp_path.parent / "victim-created.har"
+    assert not target.exists()
+    (adir / "pair.har").symlink_to(target)
+    src = tmp_path / "pair.har"
+    src.write_text("bytes", encoding="utf-8")
+    ok, message = add_artifact(project, "dangling", atype="differential_pair", src=str(src))
+    assert ok
+    assert not target.exists()
+    assert (adir / "pair-2.har").read_text(encoding="utf-8") == "bytes"
+    assert "pair-2.har" in message
+
+
+def test_gate_log_symlink_is_refused(project, write_finding, add_manifest, tmp_path):
+    from bbgate.stats import write_log
+    victim = tmp_path.parent / "victim-log.tsv"
+    victim.write_text("untouched", encoding="utf-8")
+    project.log_path.parent.mkdir(parents=True, exist_ok=True)
+    project.log_path.symlink_to(victim)
+    fp = write_finding("logged")
+    add_manifest(fp, [DIFFERENTIAL, VERIFICATION])
+    with pytest.raises(OSError, match="symlink"):
+        write_log(project, "logged", evaluate("logged", project, scope_fn=OK))
+    assert victim.read_text(encoding="utf-8") == "untouched"

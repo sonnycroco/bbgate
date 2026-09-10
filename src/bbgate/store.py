@@ -114,7 +114,7 @@ def append_manifest_row(finding_path: Path, row: dict, lock_dir: Path) -> None:
     path = manifest_path(finding_path)
     with frontmatter.locked(path, lock_dir):
         new_file = not path.exists()
-        with path.open("a", encoding="utf-8", newline="") as fh:
+        with frontmatter.open_append(path) as fh:
             writer = csv.DictWriter(
                 fh,
                 fieldnames=MANIFEST_FIELDS,
@@ -177,17 +177,23 @@ def ingest_artifact_file(finding_path: Path, src: Path) -> Path:
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest = dest_dir / src.name
 
-    if src.resolve() == dest.resolve():
+    # A symlink at the destination is never reused and never written through,
+    # whatever it points at. `exists()` is false for a dangling link, which is
+    # exactly the case where copy2 would create the link's target.
+    def occupied(p: Path) -> bool:
+        return p.is_symlink() or p.exists()
+
+    if not dest.is_symlink() and dest.exists() and src.resolve() == dest.resolve():
         return dest
 
-    if dest.exists() and sha256_file(dest) != sha256_file(src):
+    if dest.is_symlink() or (dest.exists() and sha256_file(dest) != sha256_file(src)):
         stem, suffix = src.stem, src.suffix
         n = 2
-        while dest.exists():
+        while occupied(dest):
             dest = dest_dir / f"{stem}-{n}{suffix}"
             n += 1
 
-    if not dest.exists():
+    if not occupied(dest):
         shutil.copy2(src, dest)
     return dest
 
