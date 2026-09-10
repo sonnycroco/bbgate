@@ -47,9 +47,24 @@ failure, but it wastes their time.
 
 ## The Claude Code hook
 
-Claude Code can run a command when the agent tries to end its turn, and a
-non-zero exit with a specific code sends the output back to the model instead
-of letting it stop. Add this to `.claude/settings.json` in the project:
+Claude Code can run a command when the agent tries to end its turn. Exit code
+2 blocks the stop and hands whatever the command wrote to stderr back to the
+model as the reason. Save this as `.claude/hooks/bbgate-stop.sh` in the
+project and make it executable:
+
+```sh
+#!/bin/sh
+# Claude Code passes hook input as JSON on stdin. stop_hook_active is true when
+# this hook already blocked once this turn, so exit clean then: the model has
+# had its chance to act, and blocking again would only loop.
+input=$(cat)
+case "$input" in
+  *'"stop_hook_active":true'*|*'"stop_hook_active": true'*) exit 0 ;;
+esac
+bbgate gate --all --claimed >&2 || exit 2
+```
+
+Then point `.claude/settings.json` at it. Stop hooks take no `matcher` field:
 
 ```json
 {
@@ -59,7 +74,7 @@ of letting it stop. Add this to `.claude/settings.json` in the project:
         "hooks": [
           {
             "type": "command",
-            "command": "bbgate gate --all --claimed >&2 || exit 2"
+            "command": ".claude/hooks/bbgate-stop.sh"
           }
         ]
       }
@@ -73,7 +88,10 @@ What it does: every time the agent is about to stop, every finding whose
 exits 2, Claude Code blocks the stop and hands the gate output to the model.
 The model then has the failing check and the next artifact in front of it and
 can tell you what to capture. Findings that do not claim to be ready are left
-alone, so work in progress never trips the hook.
+alone, so work in progress never trips the hook. The `stop_hook_active` guard
+means it blocks once per turn, not forever; Claude Code also overrides a Stop
+hook after eight consecutive blocks, so a hook without the guard would not loop
+indefinitely, but it would waste eight rounds first.
 
 The hook never makes the model do the capturing. It cannot: the artifact has to
 come from a person running the request. What the hook removes is the case where
