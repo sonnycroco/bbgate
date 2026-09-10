@@ -239,3 +239,18 @@ def test_gate_output_names_the_checks(tmp_path, project, write_finding, add_mani
     assert "impact_artifact_exists" in result.output
     payload = json.loads(run(["gate", "cli-named", "--json"], tmp_path).output)
     assert payload["checks"][2]["name"] == "impact_artifact_exists"
+
+
+def test_user_text_is_not_parsed_as_markup(tmp_path, project, write_finding, add_manifest):
+    """A repro line is quoted back in a reason. It is text, not Rich markup."""
+    fp = write_finding(
+        "markup",
+        repro=["Log in [/bold] as before [red]still logged in[/red]"],
+        target_host="[link=http://x]api[/link].example.com",
+    )
+    add_manifest(fp, [DIFFERENTIAL, VERIFICATION])
+    result = run(["gate", "markup"], tmp_path)
+    assert result.exit_code == 1, result.output
+    assert "[/bold]" in result.output
+    assert run(["gate", "--all"], tmp_path).exit_code == 1
+    assert run(["package", "markup"], tmp_path).exit_code == 1

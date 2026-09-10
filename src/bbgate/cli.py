@@ -7,6 +7,7 @@ from pathlib import Path
 
 import click
 from rich.console import Console
+from rich.markup import escape
 from rich.table import Table
 
 from . import __version__, mutate, package, queue, stats
@@ -74,22 +75,25 @@ def _project() -> Config:
 
 def _finish(ok: bool, message: str) -> None:
     """Print a mutator result and exit on its success flag."""
-    console.print(message, style="green" if ok else "red")
+    console.print(escape(message), style="green" if ok else "red")
     raise SystemExit(0 if ok else 1)
 
 
 def _print_checks(cfg: Config, verdict) -> None:
     # The name rides beside the id on every line. The id is what config and
     # JSON key on, but "check_8" on its own tells a first-time reader nothing.
+    # Reasons quote repro lines and hostnames, which is user text and must not
+    # be parsed as markup: a repro step containing "[/bold]" would crash here.
     for check in verdict.checks:
         label = f"{check.cid} [dim]{check.name}[/dim]"
+        reason = escape(check.reason)
         if check.passed:
-            console.print(f"  [green]PASS[/green] {label}: {check.reason}")
+            console.print(f"  [green]PASS[/green] {label}: {reason}")
             continue
         tag = "DROP" if check.fail_route == "drop" else "FAIL"
         color = "red" if check.fail_route == "drop" else "yellow"
         mark = " [dim](load-bearing)[/dim]" if check.cid in cfg.load_bearing else ""
-        console.print(f"  [{color}]{tag}[/{color}] {label}{mark}: {check.reason}")
+        console.print(f"  [{color}]{tag}[/{color}] {label}{mark}: {reason}")
 
 
 def _print_verdict(cfg: Config, verdict) -> None:
@@ -104,13 +108,13 @@ def _print_verdict(cfg: Config, verdict) -> None:
     style = _VERDICT_STYLE.get(verdict.verdict, "bold")
     console.print(f"\n[{style}]VERDICT: {verdict.verdict}[/{style}]")
     if verdict.verdict == DROP and verdict.drop_reason:
-        console.print(f"[red]Reason:[/red] {verdict.drop_reason}")
+        console.print(f"[red]Reason:[/red] {escape(verdict.drop_reason)}")
     if verdict.verdict == HOLD:
         # Only the next artifact is worth repeating here. Every hold reason was
         # already printed as its own failing check line, and echoing the joined
         # string underneath buries the one line the reader has to act on.
         if verdict.next_artifact:
-            console.print(f"[yellow]Next artifact:[/yellow] {verdict.next_artifact}")
+            console.print(f"[yellow]Next artifact:[/yellow] {escape(verdict.next_artifact)}")
         else:
             failing = ", ".join(verdict.failed_cids())
             console.print(f"[dim]Failing:[/dim] {failing}")
@@ -253,8 +257,8 @@ def gate_cmd(slug: str | None, do_all: bool, as_json: bool, claimed: bool) -> No
         else:
             detail = verdict.next_artifact or verdict.hold_reason
         style = _VERDICT_STYLE.get(verdict.verdict, "bold")
-        table.add_row(verdict.slug, f"[{style}]{verdict.verdict}[/{style}]",
-                      (detail or "").replace("\n", " "))
+        table.add_row(escape(verdict.slug), f"[{style}]{verdict.verdict}[/{style}]",
+                      escape((detail or "").replace("\n", " ")))
     console.print(table)
     if cfg.scope_mode == "none":
         console.print(
@@ -271,10 +275,10 @@ def package_cmd(slug: str) -> None:
     cfg = _project()
     ok, message, _path = package.build_package(cfg, slug)
     if not ok:
-        console.print(message, style="red")
+        console.print(escape(message), style="red")
         console.print("[red]Nothing was written.[/red]")
         raise SystemExit(1)
-    console.print(message, style="green")
+    console.print(escape(message), style="green")
     raise SystemExit(0)
 
 
@@ -431,7 +435,7 @@ def classes_cmd() -> None:
     for slug in sorted(cfg.classes):
         entry = cfg.rubric.get(slug)
         authz = "yes" if slug in cfg.authz_classes else ""
-        table.add_row(slug, authz, entry.bar if entry else "")
+        table.add_row(escape(slug), authz, escape(entry.bar) if entry else "")
     console.print(table)
     console.print(
         "[dim]authz classes need two-principal proof: a differential_pair, or a "
