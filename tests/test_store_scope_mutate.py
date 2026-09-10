@@ -305,3 +305,14 @@ def test_lock_files_stay_out_of_the_evidence_directory(project, write_finding, t
     assert ok
     assert not list(artifacts_dir(fp).glob("*.lock"))
     assert list(project.lock_dir.glob("manifest.tsv.*.lock"))
+
+
+def test_slug_cannot_leave_the_findings_directory(project, tmp_path):
+    """A slug is a filename stem. Separators and dot-dot are refused, not resolved."""
+    for bad in ("../escape", "sub/dir", "/abs", ".hidden", "", "a..b"):
+        ok, _ = new_finding(project, bad)
+        assert not ok, bad
+        assert find_finding(project, bad) is None, bad
+    assert not (tmp_path / "escape.md").exists()
+    ok, _ = new_finding(project, "fine-slug.v2")
+    assert ok

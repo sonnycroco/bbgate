@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import re
 import shutil
 from pathlib import Path
 
@@ -34,6 +35,15 @@ _CHUNK = 65536
 
 _TRUTHY = {"true", "1", "yes", "y"}
 
+# A slug is a filename stem and nothing else. No separators, no leading dot,
+# nothing that could walk out of the findings directory. The CLI is driven by
+# agents as well as people, and a slug is the one string that becomes a path.
+_SLUG_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
+
+
+def valid_slug(slug: str) -> bool:
+    return bool(slug) and ".." not in slug and _SLUG_RE.fullmatch(slug) is not None
+
 
 def find_finding(cfg: Config, slug: str) -> Path | None:
     """Resolve a slug to its finding file, or None.
@@ -43,7 +53,7 @@ def find_finding(cfg: Config, slug: str) -> Path | None:
     somehow exists twice always resolves to the same file.
     """
     base = cfg.findings_dir
-    if not base.exists():
+    if not base.exists() or not valid_slug(slug):
         return None
 
     direct = base / f"{slug}.md"

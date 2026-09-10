@@ -42,6 +42,11 @@ def new_finding(
     no repro, no clean-state run. Every check has to be earned by doing the work
     and recording it, so a fresh file must never start out looking submittable.
     """
+    if not store.valid_slug(slug):
+        return False, (
+            f"'{slug}' is not a usable slug. Use letters, digits, dots, dashes and "
+            f"underscores, starting with a letter or digit."
+        )
     path = cfg.findings_dir / f"{slug}.md"
     if path.exists():
         return False, f"{path} already exists"
