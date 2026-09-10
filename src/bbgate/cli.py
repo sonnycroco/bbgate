@@ -12,7 +12,7 @@ from rich.table import Table
 from . import __version__, mutate, package, queue, stats
 from .config import DATA_DIR, PROJECT_MARKER, Config, ProjectNotFound, load_config
 from .evaluate import evaluate
-from .model import DROP, HOLD, READY
+from .model import CHECK_MEANINGS, CHECK_NAMES, DROP, HOLD, READY
 from .scope import resolver
 from .store import all_slugs, claimed_ready
 
@@ -71,14 +71,18 @@ def _finish(ok: bool, message: str) -> None:
 
 
 def _print_checks(cfg: Config, verdict) -> None:
+    # The name rides beside the id on every line. The id is what config and
+    # JSON key on, but "check_8" on its own tells a first-time reader nothing.
     for check in verdict.checks:
+        label = f"{check.cid} [dim]{check.name}[/dim]"
         if check.passed:
-            console.print(f"  [green]PASS[/green] {check.cid}: {check.reason}")
+            console.print(f"  [green]PASS[/green] {label}: {check.reason}")
             continue
         tag = "DROP" if check.fail_route == "drop" else "FAIL"
         color = "red" if check.fail_route == "drop" else "yellow"
         mark = " [dim](load-bearing)[/dim]" if check.cid in cfg.load_bearing else ""
-        console.print(f"  [{color}]{tag}[/{color}] {check.cid}{mark}: {check.reason}")
+        console.print(f"  [{color}]{tag}[/{color}] {label}{mark}: {check.reason}")
+
 
 
 def _print_verdict(cfg: Config, verdict) -> None:
@@ -380,7 +384,26 @@ def stats_cmd(last: str) -> None:
     console.print(deaths)
 
 
+@main.command("checks")
+def checks_cmd() -> None:
+    """List the nine checks and what each one wants, in plain words."""
+    cfg = _project()
+    # A list rather than a table: four columns of prose wrap into a stack of
+    # three-word lines at eighty columns, and the names get truncated.
+    for cid, meaning in CHECK_MEANINGS.items():
+        mark = "  [yellow]stops a submission[/yellow]" if cid in cfg.load_bearing else ""
+        console.print(f"[bold]{cid}[/bold]  {CHECK_NAMES[cid]}{mark}")
+        console.print(f"    {meaning}")
+    console.print(
+        "\n[dim]A finding that fails a check marked 'stops a submission' is held "
+        "no matter what else passes. That set is the load_bearing key in "
+        ".bbgate/config.yaml.[/dim]"
+    )
+
+
+
 @main.command("classes")
+
 def classes_cmd() -> None:
     """List the known vulnerability classes and the bar each one has to clear."""
     cfg = _project()

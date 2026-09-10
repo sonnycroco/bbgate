@@ -50,7 +50,48 @@ HOLD_ORDER = (
     "check_1", "check_9", "check_2", "check_6", "check_7",
 )
 
+# The check table. The id is what the config, the log and the JSON output key
+# on; the name is what a person reads. `meaning` is one plain sentence saying
+# what the check wants, used by `bbgate checks` so nobody has to open the
+# README to learn what check_8 is.
+CHECK_NAMES = {
+    "class_known": "class_known",
+    "check_1": "impact_demonstrated",
+    "check_2": "statement_complete",
+    "check_3": "impact_artifact_exists",
+    "check_4": "differential_for_authz",
+    "check_5": "clean_state",
+    "check_6": "repro_self_contained",
+    "check_7": "scope_clear",
+    "check_8": "human_verified",
+    "check_9": "confidence_floor",
+}
+
+CHECK_MEANINGS = {
+    "check_1": "The impact tier is demonstrated: an evidence file shows the "
+               "consequence, not just the bug.",
+    "check_2": "The impact statement says who the attacker is, what they do, "
+               "and what they get.",
+    "check_3": "At least one evidence file proves the impact. A screenshot "
+               "does not count.",
+    "check_4": "For access-control bugs (IDOR and friends), the evidence shows "
+               "one user reaching another user's data, next to the same request "
+               "being refused.",
+    "check_5": "Someone reproduced the bug from a fresh account or session, "
+               "following the written steps exactly.",
+    "check_6": "The repro steps stand on their own. Nothing relies on a "
+               "session or object left over from earlier testing.",
+    "check_7": "The host is in scope, the program pays for this class, and "
+               "the finding is not flagged as a likely duplicate.",
+    "check_8": "A person re-ran the repro and recorded it (terminal log or "
+               "screen recording) after the last time a model touched the "
+               "writeup.",
+    "check_9": "Same bar as check_1, kept separate so a project can make one "
+               "of them advisory and keep the other load bearing.",
+}
+
 DEFAULT_NEXT_ARTIFACT = (
+
     "an artifact proving the consequence: differential_pair, oob_callback, "
     "poc_html with the captured value, forged_token, or an http_exchange "
     "flagged shows_privileged_data"
@@ -81,10 +122,16 @@ class CheckResult:
     reason: str
     fail_route: str = "hold"  # "hold" or "drop", only read when not passed
 
+    @property
+    def name(self) -> str:
+        return CHECK_NAMES.get(self.cid, self.cid)
+
     def to_dict(self) -> dict:
         return {
             "id": self.cid,
+            "name": self.name,
             "passed": self.passed,
+
             "reason": self.reason,
             "fail_route": self.fail_route,
         }

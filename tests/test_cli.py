@@ -219,3 +219,20 @@ def test_claimed_gates_only_self_declared_findings(tmp_path, project, write_find
 def test_claimed_requires_all(tmp_path, project, write_finding):
     write_finding("solo")
     assert run(["gate", "--claimed", "solo"], tmp_path).exit_code == 2
+
+
+def test_checks_explains_every_check(tmp_path, project):
+    output = run(["checks"], tmp_path).output
+    for n in range(1, 10):
+        assert f"check_{n}" in output
+    assert "human_verified" in output
+
+
+def test_gate_output_names_the_checks(tmp_path, project, write_finding, add_manifest):
+    """An id alone means nothing to someone seeing the tool for the first time."""
+    fp = write_finding("cli-named", vuln_class="info-disclosure")
+    add_manifest(fp, [VERIFICATION])
+    result = run(["gate", "cli-named"], tmp_path)
+    assert "impact_artifact_exists" in result.output
+    payload = json.loads(run(["gate", "cli-named", "--json"], tmp_path).output)
+    assert payload["checks"][2]["name"] == "impact_artifact_exists"
