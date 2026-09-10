@@ -329,3 +329,11 @@ def test_exit_codes(project, write_finding, add_manifest):
     assert evaluate("codes", project, scope_fn=OK).exit_code == 0
     assert evaluate("codes", project, scope_fn=WARN).exit_code == 1
     assert evaluate("codes", project, scope_fn=BLOCK).exit_code == 2
+
+
+def test_program_name_matches_case_insensitively(tmp_path, write_finding, add_manifest):
+    """A capitalised program name must not skip the excludes list."""
+    cfg = make_project(tmp_path, programs={"example-bbp": {"excludes": ["idor"]}})
+    fp = write_finding("idor-caps", program="Example-BBP")
+    add_manifest(fp, [DIFFERENTIAL, VERIFICATION])
+    assert evaluate("idor-caps", cfg, scope_fn=OK).verdict == "DROP"

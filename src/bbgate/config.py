@@ -73,7 +73,16 @@ class Config:
         """
         if not program:
             return []
-        entry = self.programs.get(program) or {}
+        # Matched case-insensitively, like class slugs. A finding that says
+        # `program: Example-BBP` against a config key of `example-bbp` was
+        # silently skipping the excludes list, which is the wrong direction to
+        # fail in.
+        wanted = program.strip().lower()
+        entry = next(
+            (v for k, v in self.programs.items() if str(k).strip().lower() == wanted),
+            None,
+        ) or {}
+
         raw = entry.get("excludes") if isinstance(entry, dict) else None
         if not isinstance(raw, list):
             return []
