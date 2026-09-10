@@ -158,9 +158,14 @@ def init_cmd(example: bool) -> None:
             console.print("No example ships with this build, skipping.", style="yellow")
 
     console.print("\nNext:")
+    console.print("  bbgate checks                     what the nine checks want, in plain words")
     console.print("  bbgate new my-finding --class idor --host api.example.com")
     console.print("  bbgate gate my-finding")
     console.print("  bbgate queue")
+    if example:
+        console.print("\nThe example is findings/customer-pii-idor.md. Start with:")
+        console.print("  bbgate gate customer-pii-idor")
+
 
 
 @main.command("new")
