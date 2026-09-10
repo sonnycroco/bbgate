@@ -33,8 +33,10 @@ ENV/
 .claude/
 CLAUDE.md
 
-# Local gate state. The log is telemetry from one machine and merges badly.
+# Local gate state. The log is telemetry from one machine and merges badly, and
+# the lock files are empty.
 .bbgate/gate-log.tsv
+.bbgate/locks/
 
 # QUEUE.md is generated but deliberately NOT ignored. It is the diffable record
 # of what you owe, and it is meant to be committed.

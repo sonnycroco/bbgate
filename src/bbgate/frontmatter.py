@@ -6,6 +6,7 @@ target first, and an interrupt at the wrong moment leaves an empty finding.
 """
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 from contextlib import contextmanager
@@ -85,8 +86,19 @@ def write_frontmatter(path: Path, fm: dict) -> None:
     write_text_atomic(path, serialize_frontmatter(fm) + body)
 
 
+def lock_path_for(path: Path, lock_dir: Path) -> Path:
+    """Where the lock file for `path` lives.
+
+    Lock files are kept together under the project's `.bbgate/locks/` rather
+    than beside the file they guard. A lock next to the manifest sat in the
+    evidence directory looking like evidence, and ended up committed.
+    """
+    digest = hashlib.sha256(str(path.resolve()).encode("utf-8")).hexdigest()[:16]
+    return lock_dir / f"{path.name}.{digest}.lock"
+
+
 @contextmanager
-def locked(path: Path):
+def locked(path: Path, lock_dir: Path):
     """Advisory lock around an append to `path`.
 
     The manifest and the gate log are append-only and two processes appending at
@@ -100,8 +112,8 @@ def locked(path: Path):
         return
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    lock_path = path.with_name(path.name + ".lock")
-    with open(lock_path, "w") as fh:
+    lock_dir.mkdir(parents=True, exist_ok=True)
+    with open(lock_path_for(path, lock_dir), "w") as fh:
         fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
         try:
             yield

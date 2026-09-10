@@ -169,7 +169,7 @@ def add_artifact(
         "capture_method": capture_method.strip() or "manual",
         "shows_privileged_data": "true" if shows_privileged_data else "false",
     }
-    store.append_manifest_row(path, row)
+    store.append_manifest_row(path, row, cfg.lock_dir)
     return True, f"{slug}: {row['type']} ({dest.name}, sha256:{digest[:12]})"
 
 

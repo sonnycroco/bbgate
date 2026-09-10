@@ -294,3 +294,14 @@ def test_evidence_markdown_cannot_shadow_a_finding(project, write_finding, add_m
     decoy = artifacts_dir(fp) / "deep.md"
     decoy.write_text("captured response body", encoding="utf-8")
     assert find_finding(project, "deep") == fp
+
+
+def test_lock_files_stay_out_of_the_evidence_directory(project, write_finding, tmp_path):
+    """Evidence directories hold evidence. The lock lives under .bbgate/locks/."""
+    fp = write_finding("locks")
+    src = tmp_path / "pair.har"
+    src.write_text("bytes", encoding="utf-8")
+    ok, _ = add_artifact(project, "locks", atype="differential_pair", src=str(src))
+    assert ok
+    assert not list(artifacts_dir(fp).glob("*.lock"))
+    assert list(project.lock_dir.glob("manifest.tsv.*.lock"))

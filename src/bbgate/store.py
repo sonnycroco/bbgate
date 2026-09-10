@@ -99,10 +99,10 @@ def read_manifest(finding_path: Path) -> list[Artifact]:
     return rows
 
 
-def append_manifest_row(finding_path: Path, row: dict) -> None:
+def append_manifest_row(finding_path: Path, row: dict, lock_dir: Path) -> None:
     """Append one row, writing the header if the manifest is new."""
     path = manifest_path(finding_path)
-    with frontmatter.locked(path):
+    with frontmatter.locked(path, lock_dir):
         new_file = not path.exists()
         with path.open("a", encoding="utf-8", newline="") as fh:
             writer = csv.DictWriter(

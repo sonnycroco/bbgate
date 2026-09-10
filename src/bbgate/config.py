@@ -23,6 +23,7 @@ from .model import (
 )
 
 PROJECT_MARKER = ".bbgate"
+LOCKS_DIRNAME = "locks"
 CONFIG_NAME = "config.yaml"
 DATA_DIR = Path(__file__).resolve().parent / "data"
 
@@ -59,6 +60,10 @@ class Config:
     scope_mode: str = "none"
     scope_command: str = ""
     programs: dict = field(default_factory=dict)
+
+    @property
+    def lock_dir(self) -> Path:
+        return self.root / PROJECT_MARKER / LOCKS_DIRNAME
 
     def next_artifact_hint(self, vuln_class: str) -> str:
         entry = self.rubric.get(vuln_class)
