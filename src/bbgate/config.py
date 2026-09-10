@@ -32,6 +32,10 @@ class ProjectNotFound(Exception):
     """No .bbgate directory at or above the given path."""
 
 
+class ConfigError(Exception):
+    """The project config asks for something the tool will not do."""
+
+
 @dataclass(frozen=True)
 class RubricEntry:
     """What a class looks like when it is only a condition, and what clears it."""
@@ -153,6 +157,24 @@ def _resolve(root: Path, value, default: str) -> Path:
     return p if p.is_absolute() else (root / p)
 
 
+def _inside_root(root: Path, path: Path, key: str) -> Path:
+    """Refuse a path the tool would write to that lies outside the project.
+
+    A config file travels with the project, so a cloned repo can carry one the
+    person running the tool never wrote. The paths the tool writes to (findings,
+    the queue, the log) therefore have to stay under the project root. Read-only
+    paths (the class list, the rubric) are not constrained.
+    """
+    try:
+        path.resolve().relative_to(root.resolve())
+    except ValueError:
+        raise ConfigError(
+            f"{key} points outside the project ({path}). Paths the tool writes to "
+            f"must be inside {root}."
+        ) from None
+    return path
+
+
 def _as_set(value, default: set) -> set:
     if not isinstance(value, list):
         return set(default)
@@ -169,11 +191,15 @@ def load_config(root: Path | None = None) -> Config:
     scope = raw.get("scope") if isinstance(raw.get("scope"), dict) else {}
     programs = raw.get("programs") if isinstance(raw.get("programs"), dict) else {}
 
+    findings_dir = _resolve(root, raw.get("findings_dir"), "findings")
+    queue_path = _resolve(root, raw.get("queue_path"), "QUEUE.md")
+    log_path = _resolve(root, raw.get("log_path"), ".bbgate/gate-log.tsv")
+
     return Config(
         root=root,
-        findings_dir=_resolve(root, raw.get("findings_dir"), "findings"),
-        queue_path=_resolve(root, raw.get("queue_path"), "QUEUE.md"),
-        log_path=_resolve(root, raw.get("log_path"), ".bbgate/gate-log.tsv"),
+        findings_dir=_inside_root(root, findings_dir, "findings_dir"),
+        queue_path=_inside_root(root, queue_path, "queue_path"),
+        log_path=_inside_root(root, log_path, "log_path"),
         classes=load_classes(_resolve(root, classes_override, "") if classes_override else None),
         rubric=load_rubric(_resolve(root, rubric_override, "") if rubric_override else None),
         load_bearing=_as_set(raw.get("load_bearing"), DEFAULT_LOAD_BEARING),

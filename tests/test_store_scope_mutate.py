@@ -4,7 +4,7 @@ from __future__ import annotations
 import pytest
 import yaml
 
-from bbgate.config import ProjectNotFound, find_root, load_config
+from bbgate.config import ConfigError, ProjectNotFound, find_root, load_config
 from bbgate.evaluate import evaluate
 from bbgate.model import DEFAULT_LOAD_BEARING
 from bbgate.mutate import add_artifact, add_clean_run, new_finding, set_impact, stamp_ai
@@ -316,3 +316,30 @@ def test_slug_cannot_leave_the_findings_directory(project, tmp_path):
     assert not (tmp_path / "escape.md").exists()
     ok, _ = new_finding(project, "fine-slug.v2")
     assert ok
+
+
+@pytest.mark.parametrize("key", ["findings_dir", "queue_path", "log_path"])
+def test_config_cannot_point_writes_outside_the_project(tmp_path, key):
+    """A cloned repo carries its config. Nothing in it may aim a write elsewhere."""
+    outside = tmp_path.parent / "elsewhere"
+    (tmp_path / ".bbgate").mkdir()
+    (tmp_path / ".bbgate" / "config.yaml").write_text(
+        f"{key}: {outside}\n", encoding="utf-8"
+    )
+    with pytest.raises(ConfigError, match=key):
+        load_config(tmp_path)
+    dotdot = tmp_path / ".bbgate" / "config.yaml"
+    dotdot.write_text(f"{key}: ../escape\n", encoding="utf-8")
+    with pytest.raises(ConfigError, match=key):
+        load_config(tmp_path)
+
+
+def test_read_only_config_paths_may_live_outside(tmp_path):
+    """A shared taxonomy kept outside the repo is a normal thing to want."""
+    shared = tmp_path.parent / "shared-classes.yaml"
+    shared.write_text("classes:\n  mine:\n    - custom\n", encoding="utf-8")
+    (tmp_path / ".bbgate").mkdir()
+    (tmp_path / ".bbgate" / "config.yaml").write_text(
+        f"classes: {shared}\n", encoding="utf-8"
+    )
+    assert load_config(tmp_path).classes == {"custom"}

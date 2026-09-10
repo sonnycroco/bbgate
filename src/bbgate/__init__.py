@@ -7,7 +7,7 @@ proves a condition instead of a demonstrated consequence.
 The verdict is never stored. It is recomputed from disk on every call, so a
 `status: ready-to-submit` typed by hand is a claim, not a verdict.
 """
-from .config import Config, ProjectNotFound, find_root, load_config
+from .config import Config, ConfigError, ProjectNotFound, find_root, load_config
 from .evaluate import evaluate
 from .model import (
     DROP,
@@ -29,6 +29,7 @@ __all__ = [
     "Artifact",
     "CheckResult",
     "Config",
+    "ConfigError",
     "ProjectNotFound",
     "Verdict",
     "READY",

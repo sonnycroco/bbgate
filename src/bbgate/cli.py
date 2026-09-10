@@ -10,7 +10,7 @@ from rich.console import Console
 from rich.table import Table
 
 from . import __version__, mutate, package, queue, stats
-from .config import DATA_DIR, PROJECT_MARKER, Config, ProjectNotFound, load_config
+from .config import DATA_DIR, PROJECT_MARKER, Config, ConfigError, ProjectNotFound, load_config
 from .evaluate import evaluate
 from .model import CHECK_MEANINGS, CHECK_NAMES, DROP, HOLD, READY
 from .scope import resolver
@@ -67,7 +67,7 @@ def _project() -> Config:
     """Resolve the project or exit 2 with the reason."""
     try:
         return load_config()
-    except ProjectNotFound as exc:
+    except (ProjectNotFound, ConfigError) as exc:
         click.echo(str(exc), err=True)
         raise SystemExit(2) from exc
 

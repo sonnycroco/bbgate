@@ -350,6 +350,13 @@ must print JSON:
 a missing binary answers `unknown`, so an engine that broke cannot pass a
 finding by failing.
 
+Two things about config that matter when you clone somebody else's project.
+The scope command runs on your machine, so read `.bbgate/config.yaml` before
+you gate anything in a repo you did not create, the same way you would read a
+git hook. And the paths the tool writes to (`findings_dir`, `queue_path`,
+`log_path`) must sit inside the project; a config that points one of them
+elsewhere is refused with exit code 2 rather than followed.
+
 ## Exit codes and CI
 
 `0` READY, `1` HOLD, `2` DROP or a usage error. `package` writes nothing and
